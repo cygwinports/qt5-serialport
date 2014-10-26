@@ -1,0 +1,41 @@
+inherit qt5-qmake
+
+NAME="qt5-serialport"
+VERSION=5.3.2
+RELEASE=1
+CATEGORY="Libs"
+SUMMARY="Qt C++ application framework (SerialPort API)"
+DESCRIPTION="Qt is a cross-platform application framework for desktop and
+embedded development. Qt enables programmers to create advanced GUI
+applications once and deploy them to Windows, Mac OS X and Linux without
+rewriting the source code. Companies using Qt can leverage software
+investments made on one platform across many others."
+HOMEPAGE="http://qt-project.org/"
+SRC_URI="http://download.qt-project.org/official_releases/qt/${VERSION%.*}/${VERSION}/submodules/qtserialport-opensource-src-${VERSION}.tar.xz"
+SRC_DIR="qtserialport-opensource-src-${VERSION}"
+PATCH_URI="5.3.2-cygwin.patch"
+
+PKG_NAMES="libQt5SerialPort5 libQt5SerialPort-devel ${NAME}-doc"
+libQt5SerialPort5_CONTENTS="usr/bin/cygQt5SerialPort-5.dll usr/share/doc/"
+libQt5SerialPort_devel_CONTENTS="
+	usr/include/qt5/QtSerialPort/
+	usr/lib/cmake/Qt5SerialPort/
+	usr/lib/libQt5SerialPort.*
+	usr/lib/pkgconfig/Qt5SerialPort.pc
+	usr/lib/qt5/mkspecs/modules/qt_lib_serialport.pri
+	usr/lib/qt5/mkspecs/modules/qt_lib_serialport_private.pri
+"
+qt5_serialport_doc_CATEGORY="Doc"
+qt5_serialport_doc_CONTENTS="usr/share/qt5/doc/qtserialport*"
+
+src_compile() {
+	cd ${B}
+	cygqmake5 ${S}
+	cygmake
+	cygmake docs
+}
+
+src_install() {
+	cd ${B}
+	qt5_qmake_install install_docs
+}
